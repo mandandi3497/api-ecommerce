@@ -33,6 +33,9 @@ La API permite crear y consultar productos, añadir productos a un carrito de co
 
 api-ecommerce/
 │
+├── api/
+│ └── index.js
+│
 ├── src/
 │ ├── config/
 │ │ └── database.js
@@ -56,10 +59,13 @@ api-ecommerce/
 ├── postman/
 │ └── API E-commerce.postman_collection.json
 │
+├── diagrama-api-ecommerce.drawio.pdf
 ├── server.js
+├── vercel.json
 ├── package.json
 ├── package-lock.json
 ├── .env.example
+├── .gitignore
 └── README.md
 
 ## 5. Instalación y configuración
@@ -178,10 +184,17 @@ Para utilizarla, hay que importar el archivo desde Postman.
 
 ## 10. Despliegue
 
-El proyecto está preparado para su despliegue en Vercel.
+La API está desplegada correctamente en Vercel y funciona en producción.
 
-La dirección pública de la API se añadirá una vez completado el despliegue.
+**URL pública:**
 
-## 11. Diagrama
+https://api-ecommerce-virid.vercel.app
 
-Se incluye un diagrama de flujo del funcionamiento de la tienda online, con los procesos de consulta de productos, gestión del carrito y realización de compras.
+Se han comprobado los cinco endpoints de la API y su conexión con MongoDB Atlas.
+
+## 11. Diagramas
+
+Se incluye un documento PDF con dos diagramas:
+
+- Diagrama de flujo: representa el funcionamiento de la tienda online, desde la consulta de productos hasta la confirmación de la compra.
+- Diagrama de componentes: muestra la estructura de la API y la relación entre el cliente, Express, los modelos, MongoDB Atlas, las pruebas automatizadas y el despliegue en Vercel.
