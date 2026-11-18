@@ -1,77 +1,196 @@
 {
-    "info": {
-        "name": "API E-commerce",
-        "description": "Colección de Postman para probar los endpoints de la API de la tienda online.",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    },
-    "item": [
+  "info": {
+    "_postman_id": "be1e84ad-e334-47c7-b5fc-5f7e69067107",
+    "name": "API E-commerce Copy",
+    "description": "Colección de Postman para probar los endpoints de la API de la tienda online.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54111147",
+    "_collection_link": "https://go.postman.co/collection/54111147-be1e84ad-e334-47c7-b5fc-5f7e69067107?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Crear producto",
+      "event": [
         {
-            "name": "Crear producto",
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n    \"nombre\": \"Teclado inalámbrico Logitech\",\n    \"descripcion\": \"Teclado inalámbrico para ordenador\",\n    \"precio\": 39.99,\n    \"stock\": 10\n}",
-                    "options": {
-                        "raw": {
-                            "language": "json"
-                        }
-                    }
-                },
-                "url": "http://localhost:3000/products"
-            }
-        },
-        {
-            "name": "Listar productos",
-            "request": {
-                "method": "GET",
-                "header": [],
-                "url": "http://localhost:3000/products"
-            }
-        },
-        {
-            "name": "Agregar producto al carrito",
-            "request": {
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "{\n    \"productoId\": \"ID_DEL_PRODUCTO\",\n    \"cantidad\": 2\n}",
-                    "options": {
-                        "raw": {
-                            "language": "json"
-                        }
-                    }
-                },
-                "url": "http://localhost:3000/cart"
-            }
-        },
-        {
-            "name": "Consultar carrito",
-            "request": {
-                "method": "GET",
-                "header": [],
-                "url": "http://localhost:3000/cart"
-            }
-        },
-        {
-            "name": "Realizar checkout",
-            "request": {
-                "method": "POST",
-                "header": [],
-                "url": "http://localhost:3000/checkout"
-            }
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"El producto se crea correctamente\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"La respuesta contiene un mensaje de éxito\", function () {\r\n    const respuesta = pm.response.json();\r\n    pm.expect(respuesta.mensaje).to.eql(\"Producto creado correctamente\");\r\n});\r\n\r\npm.test(\"El producto creado contiene sus datos\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta.producto).to.have.property(\"nombre\");\r\n    pm.expect(respuesta.producto).to.have.property(\"precio\");\r\n    pm.expect(respuesta.producto).to.have.property(\"stock\");\r\n});\r\n\r\n// Guardar automáticamente el ID para utilizarlo en el carrito.\r\nconst respuesta = pm.response.json();\r\n\r\npm.collectionVariables.set(\r\n    \"productoId\",\r\n    respuesta.producto._id\r\n);"
+            ]
+          }
         }
-    ]
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nombre\": \"Teclado inalámbrico Logitech\",\n    \"descripcion\": \"Teclado inalámbrico para ordenador\",\n    \"precio\": 39.99,\n    \"stock\": 10\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listar productos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"La consulta de productos responde correctamente\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"La respuesta contiene una lista de productos\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta).to.have.property(\"productos\");\r\n    pm.expect(respuesta.productos).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"La respuesta contiene el total de productos\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta.total).to.be.a(\"number\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/products",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Agregar producto al carrito",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"El producto se agrega correctamente al carrito\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"La respuesta contiene un mensaje de éxito\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta.mensaje).to.eql(\r\n        \"Producto agregado al carrito correctamente\"\r\n    );\r\n});\r\n\r\npm.test(\"El carrito contiene el producto agregado\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta.carrito.items).to.be.an(\"array\");\r\n    pm.expect(respuesta.carrito.items.length).to.be.above(0);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"productoId\": \"{{productoId}}\",\n    \"cantidad\": 2\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/cart",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "cart"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar carrito",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"La consulta del carrito responde correctamente\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"La respuesta contiene los productos del carrito\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta).to.have.property(\"items\");\r\n    pm.expect(respuesta.items).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Los productos del carrito tienen una cantidad válida\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    respuesta.items.forEach(function (item) {\r\n        pm.expect(item.cantidad).to.be.a(\"number\");\r\n        pm.expect(item.cantidad).to.be.above(0);\r\n    });\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/cart",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "cart"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Realizar checkout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"El checkout se realiza correctamente\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"La compra devuelve un mensaje de confirmación\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta.mensaje).to.eql(\r\n        \"Compra realizada correctamente. Pago simulado.\"\r\n    );\r\n});\r\n\r\npm.test(\"El pedido queda registrado como pagado\", function () {\r\n    const respuesta = pm.response.json();\r\n\r\n    pm.expect(respuesta.pedido.estado).to.eql(\"pagado\");\r\n    pm.expect(respuesta.pedido.metodoPago).to.eql(\"simulado\");\r\n    pm.expect(respuesta.pedido.total).to.be.a(\"number\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/checkout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "checkout"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "productoId",
+      "value": ""
+    }
+  ]
 }
