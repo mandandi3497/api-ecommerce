@@ -103,3 +103,89 @@ El archivo `.env` contiene información privada y no debe subirse a GitHub.
 Para iniciar el servidor en local se utiliza:
 
 npm start
+
+## 7. Endpoints de la API
+
+La API dispone de los siguientes endpoints:
+
+| Método | Endpoint    | Descripción                                   |
+| ------ | ----------- | --------------------------------------------- |
+| POST   | `/products` | Crear un producto.                            |
+| GET    | `/products` | Consultar todos los productos.                |
+| POST   | `/cart`     | Añadir un producto al carrito.                |
+| GET    | `/cart`     | Consultar el contenido del carrito.           |
+| POST   | `/checkout` | Realizar la compra mediante un pago simulado. |
+
+### Ejemplos de uso
+
+**Crear un producto — POST /products**
+
+{
+"nombre": "Teclado inalámbrico Logitech",
+"descripcion": "Teclado inalámbrico para ordenador",
+"precio": 39.99,
+"stock": 10
+}
+
+**Añadir un producto al carrito — POST /cart**
+
+{
+"productoId": "ID_DEL_PRODUCTO",
+"cantidad": 2
+}
+
+**Realizar la compra — POST /checkout**
+
+El endpoint procesa los productos del carrito, comprueba el stock, calcula el importe total y registra el pedido. El pago es simulado.
+
+## 8. Pruebas automatizadas con Jest
+
+El proyecto utiliza Jest y Supertest para comprobar el funcionamiento de la API.
+
+Se han implementado cuatro pruebas automatizadas:
+
+- Crear un producto correctamente.
+- Añadir un producto al carrito.
+- Rechazar una compra cuando el carrito está vacío.
+- Realizar una compra correctamente, registrar el pedido y vaciar el carrito.
+
+Para ejecutar las pruebas:
+
+npm test
+
+**Resultado:** las cuatro pruebas se ejecutan correctamente.
+
+## 9. Pruebas con Postman
+
+Se incluye una colección de Postman en la carpeta `postman`, con el archivo `API E-commerce.postman_collection.json`.
+
+La colección contiene cinco peticiones para probar el funcionamiento de todos los endpoints:
+
+1. Crear producto.
+2. Listar productos.
+3. Agregar producto al carrito.
+4. Consultar carrito.
+5. Realizar checkout.
+
+Cada petición incorpora pruebas automáticas para comprobar el estado de la respuesta y los datos devueltos.
+
+La colección incluye un total de 15 comprobaciones automáticas. También guarda automáticamente el identificador del producto creado para utilizarlo en la petición de añadir al carrito.
+
+Las cinco peticiones se han probado correctamente.
+
+## 10. Despliegue y repositorio
+
+El proyecto está publicado en GitHub y desplegado en Vercel.
+
+- **Repositorio de GitHub:** https://github.com/mandandi3497/api-ecommerce
+- **API desplegada en Vercel:** https://api-ecommerce-virid.vercel.app
+- **Base de datos:** MongoDB Atlas.
+
+La variable de entorno `MONGODB_URI` se configura en Vercel para establecer la conexión con MongoDB Atlas.
+
+## 11. Diagramas
+
+Se incluye el archivo `diagrama-api-ecommerce.drawio.pdf`, que contiene dos diagramas:
+
+- **Diagrama de flujo:** representa el proceso de consulta de productos, gestión del carrito y realización de la compra.
+- **Diagrama de componentes:** representa la organización de la API y la relación entre sus principales componentes, controladores, modelos, rutas y base de datos.
