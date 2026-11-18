@@ -6,30 +6,38 @@ Este proyecto consiste en el desarrollo de una API REST para gestionar una tiend
 
 La API permite crear y consultar productos, añadir productos a un carrito de compra y realizar pedidos mediante un proceso de pago simulado.
 
+El objetivo es desarrollar las principales funcionalidades de una tienda online y comprobar su funcionamiento mediante pruebas automatizadas con Jest y peticiones realizadas desde Postman.
+
 ## 2. Tecnologías utilizadas
 
-- Node.js: entorno de ejecución de JavaScript.
-- Express: framework para crear la API REST.
-- MongoDB Atlas: base de datos en la nube.
-- Mongoose: conexión y gestión de los datos de MongoDB.
-- dotenv: gestión de variables de entorno.
-- Jest: pruebas automatizadas.
-- Supertest: pruebas de los endpoints HTTP.
-- Postman: comprobación manual de los endpoints.
-- Vercel: plataforma de despliegue.
+- **Node.js:** entorno de ejecución de JavaScript.
+- **Express:** framework para desarrollar la API REST.
+- **MongoDB Atlas:** base de datos en la nube.
+- **Mongoose:** herramienta para trabajar con MongoDB.
+- **dotenv:** gestión de variables de entorno.
+- **Jest:** ejecución de pruebas automatizadas.
+- **Supertest:** realización de peticiones HTTP durante las pruebas.
+- **Postman:** comprobación manual de los endpoints.
+- **GitHub:** almacenamiento y control de versiones del proyecto.
+- **Vercel:** despliegue de la API.
 
-## 3. Funcionalidades
+## 3. Funcionalidades principales
 
-- Crear productos.
+La API dispone de las siguientes funcionalidades:
+
+- Crear productos con nombre, descripción, precio y stock.
 - Consultar los productos disponibles.
-- Añadir productos al carrito.
+- Añadir productos al carrito indicando la cantidad.
 - Consultar el contenido del carrito.
-- Comprobar que existe stock suficiente.
-- Realizar una compra mediante un pago simulado.
-- Registrar el pedido y actualizar el stock.
-- Vaciar el carrito después de completar la compra.
+- Realizar una compra mediante un proceso de pago simulado.
+- Comprobar que existe stock suficiente antes de completar la compra.
+- Registrar el pedido realizado.
+- Actualizar el stock de los productos después de la compra.
+- Vaciar el carrito una vez finalizado el pedido.
 
 ## 4. Estructura del proyecto
+
+La organización de los archivos es la siguiente:
 
 api-ecommerce/
 │
@@ -39,18 +47,22 @@ api-ecommerce/
 ├── src/
 │ ├── config/
 │ │ └── database.js
-│ ├── models/
-│ │ ├── Product.js
-│ │ ├── Cart.js
-│ │ └── Order.js
+│ │
 │ ├── controllers/
-│ │ ├── productController.js
 │ │ ├── cartController.js
-│ │ └── checkoutController.js
+│ │ ├── checkoutController.js
+│ │ └── productController.js
+│ │
+│ ├── models/
+│ │ ├── Cart.js
+│ │ ├── Order.js
+│ │ └── Product.js
+│ │
 │ ├── routes/
-│ │ ├── productRoutes.js
 │ │ ├── cartRoutes.js
-│ │ └── checkoutRoutes.js
+│ │ ├── checkoutRoutes.js
+│ │ └── productRoutes.js
+│ │
 │ └── app.js
 │
 ├── tests/
@@ -59,142 +71,159 @@ api-ecommerce/
 ├── postman/
 │ └── API E-commerce.postman_collection.json
 │
-├── diagrama-api-ecommerce.drawio.pdf
-├── server.js
-├── vercel.json
-├── package.json
-├── package-lock.json
 ├── .env.example
 ├── .gitignore
-└── README.md
+├── diagrama-api-ecommerce.drawio.pdf
+├── Documento_Entrega_API_Ecommerce.odt
+├── package.json
+├── package-lock.json
+├── README.md
+├── server.js
+└── vercel.json
 
 ## 5. Instalación y configuración
 
-Es necesario tener instalado Node.js.
+Para ejecutar el proyecto en local es necesario tener instalado Node.js y disponer de una base de datos MongoDB.
 
-1. Descargar o clonar el proyecto.
-2. Abrir una terminal en la carpeta principal.
-3. Instalar las dependencias:
+Primero, se descargan las dependencias del proyecto:
 
 npm install
 
-4. Crear un archivo `.env` a partir de `.env.example`.
-5. Configurar las variables de entorno con los datos de conexión de MongoDB Atlas.
+Después, se crea un archivo `.env` en la raíz del proyecto con la configuración de la conexión a MongoDB:
 
-Variables necesarias:
-
+MONGODB_URI=tu_url_de_conexion_a_mongodb
 PORT=3000
-MONGODB_URI=tu_uri_de_mongodb
 
-No se deben compartir las credenciales reales de la base de datos.
+La URL de conexión debe sustituirse por la correspondiente a la base de datos de MongoDB Atlas.
+
+El archivo `.env` contiene información privada y no debe subirse a GitHub.
 
 ## 6. Ejecución del proyecto
 
-Para iniciar el servidor:
+Para iniciar el servidor en local se utiliza:
 
 npm start
 
-La API estará disponible localmente en:
+Si la conexión con MongoDB se establece correctamente, la API queda disponible en:
 
-`http://localhost:3000`
+http://localhost:3000
 
 ## 7. Endpoints de la API
 
-### 7.1. Crear un producto
+La API cuenta con los siguientes endpoints:
 
-**Método:** POST
+| Método | Endpoint    | Descripción                                   |
+| ------ | ----------- | --------------------------------------------- |
+| POST   | `/products` | Crear un producto.                            |
+| GET    | `/products` | Consultar los productos disponibles.          |
+| POST   | `/cart`     | Añadir un producto al carrito.                |
+| GET    | `/cart`     | Consultar el contenido del carrito.           |
+| POST   | `/checkout` | Realizar la compra mediante un pago simulado. |
 
-**Ruta:** `/products`
+### Ejemplo de creación de producto
 
-Permite registrar un nuevo producto.
+Petición:
 
-Ejemplo del cuerpo de la petición:
+POST /products
+
+Cuerpo JSON:
 
 {
-"nombre": "Ratón inalámbrico Logitech",
-"descripcion": "Ratón inalámbrico para ordenador",
-"precio": 29.99,
-"stock": 15
+"nombre": "Teclado inalámbrico Logitech",
+"descripcion": "Teclado inalámbrico para ordenador",
+"precio": 39.99,
+"stock": 10
 }
 
-### 7.2. Consultar productos
+### Ejemplo de añadir un producto al carrito
 
-**Método:** GET
+Petición:
 
-**Ruta:** `/products`
+POST /cart
 
-Devuelve los productos que tienen stock disponible.
-
-### 7.3. Añadir un producto al carrito
-
-**Método:** POST
-
-**Ruta:** `/cart`
-
-Ejemplo del cuerpo de la petición:
+Cuerpo JSON:
 
 {
 "productoId": "ID_DEL_PRODUCTO",
 "cantidad": 2
 }
 
-Comprueba que el producto existe y que hay stock suficiente antes de añadirlo.
+El identificador debe corresponder a un producto existente en la base de datos.
 
-### 7.4. Consultar el carrito
+### Ejemplo de realizar una compra
 
-**Método:** GET
+Petición:
 
-**Ruta:** `/cart`
+POST /checkout
 
-Muestra los productos y las cantidades que contiene el carrito.
+La compra se realiza utilizando los productos que se encuentran en el carrito. El sistema calcula el importe total, comprueba el stock, registra el pedido y actualiza el carrito.
 
-### 7.5. Realizar una compra
+El pago es simulado y no se realiza ningún cobro real.
 
-**Método:** POST
+## 8. Pruebas automatizadas con Jest
 
-**Ruta:** `/checkout`
+El proyecto incluye pruebas automatizadas desarrolladas con Jest y Supertest.
 
-Comprueba el contenido del carrito y el stock disponible, calcula el importe total, registra el pedido y simula el pago.
-
-Después de completar la compra, actualiza el stock y vacía el carrito.
-
-El sistema utiliza un pago simulado y no realiza transacciones económicas reales.
-
-## 8. Pruebas automatizadas
-
-El proyecto utiliza Jest y Supertest para comprobar el funcionamiento de la API.
-
-Para ejecutar las pruebas:
+Para ejecutarlas se utiliza:
 
 npm test
 
-Las pruebas comprueban:
+Las cuatro pruebas comprueban:
 
-- La creación de productos.
-- La incorporación de productos al carrito.
-- El rechazo de una compra cuando el carrito está vacío.
+1. La creación de productos correctamente.
+2. La incorporación de productos al carrito.
+3. El rechazo del checkout cuando el carrito está vacío.
+4. La finalización correcta del checkout y el registro del pedido.
+
+**Resultado de las pruebas:**
+
+- 1 suite de pruebas superada.
+- 4 pruebas superadas.
+- 0 pruebas fallidas.
+
+Todas las pruebas se han ejecutado correctamente.
 
 ## 9. Pruebas con Postman
 
-En la carpeta `postman` se incluye la colección `API E-commerce.postman_collection.json`.
+Se incluye una colección de Postman llamada `API E-commerce`, situada en la carpeta `postman`.
 
-Esta colección contiene las cinco peticiones necesarias para comprobar el funcionamiento de la API y realizar el proceso de compra.
+La colección contiene las cinco peticiones principales de la API:
 
-Para utilizarla, hay que importar el archivo desde Postman.
+1. Crear producto.
+2. Listar productos.
+3. Agregar producto al carrito.
+4. Consultar carrito.
+5. Realizar checkout.
+
+Se ha comprobado el funcionamiento de todas las peticiones en local, verificando también que la compra se registra correctamente y que el carrito queda vacío después de finalizar el pedido.
 
 ## 10. Despliegue
 
-La API está desplegada correctamente en Vercel y funciona en producción.
+El proyecto está almacenado en GitHub y desplegado en Vercel.
 
-**URL pública:**
+**Repositorio de GitHub:**
+
+https://github.com/mandandi3497/api-ecommerce
+
+**API desplegada en Vercel:**
 
 https://api-ecommerce-virid.vercel.app
 
-Se han comprobado los cinco endpoints de la API y su conexión con MongoDB Atlas.
+La aplicación utiliza MongoDB Atlas para almacenar los productos, el carrito y los pedidos.
+
+Se han comprobado los cinco endpoints en el entorno desplegado y se ha verificado su conexión con la base de datos.
 
 ## 11. Diagramas
 
-Se incluye un documento PDF con dos diagramas:
+El proyecto incluye un documento PDF llamado `diagrama-api-ecommerce.drawio.pdf` con dos diagramas:
 
-- Diagrama de flujo: representa el funcionamiento de la tienda online, desde la consulta de productos hasta la confirmación de la compra.
-- Diagrama de componentes: muestra la estructura de la API y la relación entre el cliente, Express, los modelos, MongoDB Atlas, las pruebas automatizadas y el despliegue en Vercel.
+- **Diagrama de flujo:** representa el proceso de consulta de productos, selección, gestión del carrito y realización de la compra.
+- **Diagrama de componentes:** muestra la relación entre el cliente, la API REST, las rutas, los controladores, los modelos y MongoDB Atlas.
+
+Estos diagramas permiten comprender tanto el funcionamiento del proceso de compra como la organización general de la aplicación.
+
+---
+
+**Proyecto:** API de Tienda Online (E-commerce)  
+**Tecnologías principales:** Node.js, Express y MongoDB.  
+**Despliegue:** Vercel.

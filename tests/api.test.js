@@ -1,5 +1,7 @@
 const request = require('supertest');
 
+let mockCarritoCheckout = null;
+
 // Simular el modelo de productos.
 jest.mock('../src/models/Product', () => {
     return class Product {
@@ -23,9 +25,7 @@ jest.mock('../src/models/Product', () => {
             });
         }
 
-        static findByIdAndUpdate() {
-            return Promise.resolve({});
-        }
+        static findByIdAndUpdate = jest.fn(() => Promise.resolve({}));
     };
 });
 
@@ -43,7 +43,7 @@ jest.mock('../src/models/Cart', () => {
         static findOne() {
             const query = Promise.resolve(null);
 
-            query.populate = () => Promise.resolve(null);
+            query.populate = () => Promise.resolve(mockCarritoCheckout);
 
             return query;
         }
@@ -55,13 +55,11 @@ jest.mock('../src/models/Order', () => {
     return class Order {
         constructor(data) {
             Object.assign(this, data);
+            this._id = 'pedido123';
         }
 
         save() {
-            return Promise.resolve({
-                ...this,
-                _id: 'pedido123'
-            });
+            return Promise.resolve(this);
         }
     };
 });
@@ -69,6 +67,10 @@ jest.mock('../src/models/Order', () => {
 const app = require('../src/app');
 
 describe('Pruebas de la API de la tienda online', () => {
+
+    beforeEach(() => {
+        mockCarritoCheckout = null;
+    });
 
     test('Debe crear un producto correctamente', async () => {
         const response = await request(app)
@@ -107,6 +109,37 @@ describe('Pruebas de la API de la tienda online', () => {
 
         expect(response.statusCode).toBe(400);
         expect(response.body.mensaje).toBe('El carrito está vacío');
+    });
+
+    test('Debe completar la compra y registrar el pedido correctamente', async () => {
+        mockCarritoCheckout = {
+            items: [
+                {
+                    producto: {
+                        _id: 'producto123',
+                        nombre: 'Portátil HP',
+                        precio: 599.99,
+                        stock: 10
+                    },
+                    cantidad: 2
+                }
+            ],
+            save: jest.fn().mockResolvedValue(true)
+        };
+
+        const response = await request(app)
+            .post('/checkout');
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.mensaje).toBe(
+            'Compra realizada correctamente. Pago simulado.'
+        );
+        expect(response.body.pedido.total).toBe(1199.98);
+        expect(response.body.pedido.estado).toBe('pagado');
+        expect(response.body.pedido.metodoPago).toBe('simulado');
+        expect(response.body.pedido._id).toBe('pedido123');
+
+        expect(mockCarritoCheckout.save).toHaveBeenCalled();
     });
 
 });
